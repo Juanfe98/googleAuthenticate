@@ -3,7 +3,11 @@ import React from 'react';
 import {View, Text, Button} from 'react-native';
 // Client ID
 // 496695355777-kuaqbrjsbpiuf077mvkjjme0n2vj8k6s.apps.googleusercontent.com
-import {GoogleSignin, statusCodes} from 'react-native-google-signin';
+import {
+  GoogleSignin,
+  statusCodes,
+  GoogleSigninButton,
+} from 'react-native-google-signin';
 
 GoogleSignin.configure({
   androidClientId:
@@ -12,8 +16,16 @@ GoogleSignin.configure({
 });
 
 export const Login = () => {
+  const LogoutGoogleAccount = async () => {
+    try {
+      await GoogleSignin.signOut();
+      // this.setState({user: null}); // Remember to remove the user from your app's state as well
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const authenticateWithGoogle = async () => {
-    console.log('yeeep');
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
@@ -43,8 +55,14 @@ export const Login = () => {
       }}>
       <Text>Hola soy Login</Text>
       <Button
+        onPress={() => LogoutGoogleAccount()}
+        title="Logout Google Account"
+      />
+      <GoogleSigninButton
+        style={{width: 380, height: 60}}
+        size={GoogleSigninButton.Size.Wide}
+        color={GoogleSigninButton.Color.Dark}
         onPress={() => authenticateWithGoogle()}
-        title="Login With Google"
       />
     </View>
   );
